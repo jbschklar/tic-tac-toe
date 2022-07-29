@@ -5,8 +5,30 @@
 
 body {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+}
+
+.player-info {
+	padding: 15px;
+	border: 2px solid black;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	position: absolute;
+	top: 15vh;
+	background-color: antiquewhite;
 }
 
 .game-board {
@@ -24,4 +46,27 @@ body {
 	align-items: center;
 	justify-content: center;
 	font-size: 2rem;
+}
+
+.hidden {
+	opacity: 0;
+	position: relative;
+}
+
+.player-display {
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+	margin-top: 15px;
+}
+
+.player-display p {
+	font-size: 1.5rem;
+}
+
+h1 {
+	margin: 15px 0;
 }
