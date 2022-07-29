@@ -9,7 +9,7 @@ const gameBoard = (() => {
 	const board = document.querySelector(".game-board");
 	const squares = document.querySelectorAll(".square");
 	const inputs = document.querySelectorAll(".square-input");
-	let gameBoard = ["", "O", "", "O", "", "O", "", "", "O"];
+	let gameBoard = ["", "", "", "", "", "", "", "", ""];
 	const renderBoard = (() => {
 		squares.forEach((square) => {
 			square.innerHTML = gameBoard[square.dataset.num];
@@ -37,18 +37,6 @@ const gamePlay = (() => {
 	let player2;
 	let player1;
 
-	// const evalWin = (arr) => {
-	// 	if (
-	// 		(arr[0] === arr[1] && arr[0] === arr[2]) ||
-	// 		(arr[3] === arr[4] && arr[3] === arr[5]) ||
-	//         (arr[6] === arr[7] && arr[6] === arr[8]) ||
-	//         (arr[0] === arr[3] && arr[0] === arr[6]) ||
-	//         (arr[1] === arr[4] && arr[1] === arr[7]) ||
-	//         (arr[2] === arr[5] && arr[2] === )
-	// 	)
-	// 		win = true;
-	// };
-
 	form.addEventListener("submit", function (e) {
 		e.preventDefault();
 		const name = form.querySelector("#name").value;
@@ -63,6 +51,33 @@ const gamePlay = (() => {
 		playerMarker.innerHTML = player1.getMarker();
 		form.classList.add("hidden");
 	});
+
+	const checkWin = function (arr) {
+		const horizontalWin = [1, 3];
+		const verticalWin = [3, 1];
+		const diagonalWinA = [4, 2];
+		const diagonalWinB = [2, 2];
+
+		const calcWin = function (arr, arrInc, setInc) {
+			let win = false;
+			for (let i = 0; i < setInc * 3; i += setInc) {
+				const a = arr[i];
+				const b = arr[i + arrInc];
+				const c = arr[i + arrInc * 2];
+
+				let win = a === b && a === c ? true : false;
+				if (win && a && b && c) return win;
+			}
+			return win;
+		};
+
+		if (calcWin(arr, ...horizontalWin)) return true;
+		if (calcWin(arr, ...verticalWin)) return true;
+		if (calcWin(arr, ...diagonalWinA)) return true;
+		if (calcWin(arr, ...diagonalWinB)) return true;
+		return false;
+	};
+
 	// alternate between player and computer rounds with active key
 	// const activePlayer = document.querySelector(".active");
 	const toggleActive = (players) => {
@@ -81,6 +96,8 @@ const gamePlay = (() => {
 					toggleActive([player1, player2]);
 				}
 				if (square.innerHTML) console.log("taken");
+				if (checkWin(gameBoard.gameBoard))
+					console.log(`${activePlayer.getName()} wins!`);
 			});
 		});
 	})();
@@ -97,28 +114,45 @@ const gamePlay = (() => {
 // 3) during game play, input is alternating between player and comp. When player clicks on a square, it is filled in with the player marker. Then the computer auto fills a square.
 // 4) the computer chooses where to place a marker based on overall board and where there is an opening between player selected squares to block or win if able between it's own squares.
 // 5) each time a square is selected by either player or computer, it is updated using the gameBoard module function.
-const calcWin = function (arr, arrInc, setInc) {
-	let win = false;
-	for (let i = 0; i < setInc * 3; i += setInc) {
-		// console.log(i);
-		let win =
-			arr[i] === arr[i + arrInc] && arr[i] === arr[i + arrInc * 2]
-				? true
-				: false;
-		if (win) return win;
-	}
-	return win;
+
+const arr = ["", "x", "o", "o", "x", "", "", "x", ""];
+const arr2 = ["a", "b", "c", "d", "b", "c", "e", "b", "c"];
+const arr3 = ["X", "O", "", "X", "O", "X", "", "O", ""];
+const arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
+const arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const test = ["O", "X", "", "", "X", "O", "", "X", ""];
+
+// console.log(calcWin(arr4, 1, 3));
+const winConditions = function (arr) {
+	const calcWin = function (arr, arrInc, setInc) {
+		let win = false;
+		for (let i = 0; i < setInc * 3; i += setInc) {
+			const a = arr[i];
+			const b = arr[i + arrInc];
+			const c = arr[i + arrInc * 2];
+			// if (!a || !b || !c) {
+			// 	console.log({ a, b, c });
+			// 	return;
+			// }
+			let win = a === b && a === c ? true : false;
+			if (win && a && b && c) return win;
+		}
+		return win;
+	};
+	const horizontalWin = [1, 3];
+	const verticalWin = [3, 1];
+	const diagonalWinA = [4, 2];
+	const diagonalWinB = [2, 2];
+
+	if (calcWin(arr, ...horizontalWin)) return true;
+	if (calcWin(arr, ...verticalWin)) return true;
+	if (calcWin(arr, ...diagonalWinA)) return true;
+	if (calcWin(arr, ...diagonalWinB)) return true;
+	return false;
 };
 
-const arr = ["a", "b", "c", "a", "c", "d", "a", "f", "g"];
-const arr2 = ["a", "b", "c", "d", "b", "d", "e", "b", "g"];
-const arr3 = ["a", "b", "c", "d", "e", "c", "g", "g", "c"];
-const arr4 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-console.log(calcWin(arr, 3, 1));
-console.log(calcWin(arr2, 3, 1));
-console.log(calcWin(arr3, 3, 1));
-// console.log(calcWin(arr4, 1, 3));
-const horizontalWin = [1, 3];
-const verticalWin = [3, 1];
-const diagonalWin = [4, 2];
+// console.log(winConditions(arr));
+// console.log(winConditions(arr2));
+// console.log(winConditions(arr3));
+// console.log(winConditions(test));
+// console.log(winConditions(arr5));
