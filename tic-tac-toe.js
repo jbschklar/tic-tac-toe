@@ -121,7 +121,7 @@ const gameBoardDisplay = (() => {
 
 const arr = ["", "", "", "", "", "", "", "", ""];
 const arr2 = ["x", "", "x", "", "", "", "o", "", "o"];
-const arr3 = ["X", "O", "", "X", "O", "X", "", "O", ""];
+const arr3 = ["x", "o", "", "x", "o", "x", "", "", ""];
 const arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
 const arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const test = ["O", "X", "", "", "X", "O", "", "X", ""];
@@ -169,19 +169,22 @@ const playerAI = {
 	marker: "o",
 };
 let newArr = [];
-console.log(checkWin(arr5));
-const AI = function () {
-	for (let i = 0; i < arr2.length; i++) {
-		if (arr2[i] === "") {
-			arr2[i] = "o";
-			if (!checkWin(arr2)) {
-				arr2[i] = "";
-				console.log(arr2, i);
+// console.log(checkWin(arr5));
+
+const defenseAI = function (arr) {
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i] === "") {
+			arr[i] = "x";
+			// console.log(arr, i);
+			if (!checkWin(arr)) {
+				arr[i] = "";
+				// console.log(i);
 				continue;
 			}
-			if (checkWin(arr2)) {
-				console.log("win", i);
-				newArr = arr2.slice(0);
+			if (checkWin(arr)) {
+				console.log("block", i);
+				arr[i] = "o";
+				newArr = arr.slice(0);
 				console.log(newArr);
 				return;
 			}
@@ -189,8 +192,29 @@ const AI = function () {
 	}
 };
 
-console.log(arr2);
-AI();
+const offenseAI = function (arr) {
+	newArr = arr.slice(0);
+	for (let i = 0; i < newArr.length; i++) {
+		if (newArr[i] === "") {
+			newArr[i] = "o";
+			if (!checkWin(newArr)) {
+				newArr[i] = "";
+				console.log(newArr, i);
+				continue;
+			}
+			if (checkWin(newArr)) {
+				console.log("win", i);
+
+				console.log(newArr);
+				return;
+			}
+		}
+	}
+};
+// console.log(arr3);
+defenseAI(arr3);
+offenseAI(arr3);
+console.log(checkWin(arr3));
 // console.log(winConditions(arr));
 // console.log(winConditions(arr2));
 // console.log(winConditions(arr3));
