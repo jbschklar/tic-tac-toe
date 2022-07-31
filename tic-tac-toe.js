@@ -5,20 +5,6 @@ const Player = (name, marker, active = true) => {
 	return { name, getName, getMarker, active };
 };
 
-const gameBoard = (() => {
-	const board = document.querySelector(".game-board");
-	const squares = document.querySelectorAll(".square");
-	const inputs = document.querySelectorAll(".square-input");
-	let gameBoard = ["", "", "", "", "", "", "", "", ""];
-	const renderBoard = (() => {
-		squares.forEach((square) => {
-			square.innerHTML = gameBoard[square.dataset.num];
-		});
-	})();
-	const updateBoard = () => {};
-	return { squares, gameBoard, updateBoard };
-})();
-
 // const displayController = (() => {
 // 	const playerSelectBtn = document.querySelector(".player-select");
 // 	const form = document.querySelector("form");
@@ -94,23 +80,39 @@ const gamePlay = (() => {
 			player.active = player.active ? false : true;
 		});
 	};
-	// const selection = (() => {
-	gameBoard.squares.forEach((square) => {
-		square.addEventListener("click", (e) => {
-			const activePlayer = player1.active ? player1 : player2;
-			console.log(activePlayer);
-			if (!square.innerHTML) {
-				square.innerHTML = activePlayer.getMarker();
-				gameBoard.gameBoard[square.dataset.num] = activePlayer.getMarker();
-				toggleActive([player1, player2]);
-			}
-			if (square.innerHTML) console.log("taken");
-			if (checkWin(gameBoard.gameBoard))
-				winMessage.innerHTML = `${activePlayer.getName()} wins!`;
+	const squareSelection = (square) => {
+		console.log(player1, player2);
+		const activePlayer = player1.active ? player1 : player2;
+		console.log(activePlayer);
+		if (!square.innerHTML) {
+			// square.innerHTML = activePlayer.getMarker();
+			gameBoard.gameBoard[square.dataset.num] = activePlayer.getMarker();
+			gameBoard.renderBoard();
+			toggleActive([player1, player2]);
+		}
+		if (square.innerHTML) console.log("taken");
+		if (checkWin(gameBoard.gameBoard))
+			winMessage.innerHTML = `${activePlayer.getName()} wins!`;
+	};
+	return { squareSelection };
+})();
+
+const gameBoard = (() => {
+	const board = document.querySelector(".game-board");
+	const squares = document.querySelectorAll(".square");
+	const inputs = document.querySelectorAll(".square-input");
+	let gameBoard = ["", "", "", "", "", "", "", "", ""];
+	const renderBoard = () => {
+		squares.forEach((square) => {
+			square.innerHTML = gameBoard[square.dataset.num];
+		});
+	};
+	squares.forEach((square) => {
+		square.addEventListener("click", () => {
+			gamePlay.squareSelection(square);
 		});
 	});
-	// })();
-	return {};
+	return { squares, gameBoard, renderBoard };
 })();
 
 // const player1 = Player("Josh", "X");
@@ -165,3 +167,7 @@ const gamePlay = (() => {
 // console.log(winConditions(arr3));
 // console.log(winConditions(test));
 // console.log(winConditions(arr5));
+
+// gameplay: functions for gameplay
+
+// gameboard: update board using those functions
