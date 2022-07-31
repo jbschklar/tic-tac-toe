@@ -19,23 +19,32 @@ const gameBoard = (() => {
 	return { squares, gameBoard, updateBoard };
 })();
 
-const displayController = (() => {
+// const displayController = (() => {
+// 	const playerSelectBtn = document.querySelector(".player-select");
+// 	const form = document.querySelector("form");
+// 	const playerNameDisplay = document.querySelector(".player-name");
+// 	const playerMarkerDisplay = document.querySelector(".player-marker");
+// 	const winMessage = document.querySelector(".win-message");
+// 	const endGame = () => {};
+// 	playerSelectBtn.addEventListener("click", () => {
+// 		form.classList.remove("hidden");
+// 	});
+
+// 	return { form, playerNameDisplay, playerMarkerDisplay, winMessage, endGame };
+// })();
+
+const gamePlay = (() => {
 	const playerSelectBtn = document.querySelector(".player-select");
 	const form = document.querySelector("form");
-	const playerNameDisplay = document.querySelector(".player-name");
-	const playerMarkerDisplay = document.querySelector(".player-marker");
+	const playerName = document.querySelector(".player-name");
+	const playerMarker = document.querySelector(".player-marker");
+	const winMessage = document.querySelector(".win-message");
+	let player2;
+	let player1;
+
 	playerSelectBtn.addEventListener("click", () => {
 		form.classList.remove("hidden");
 	});
-	return { form, playerNameDisplay, playerMarkerDisplay };
-})();
-
-const gamePlay = (() => {
-	const form = displayController.form;
-	const playerName = displayController.playerNameDisplay;
-	const playerMarker = displayController.playerMarkerDisplay;
-	let player2;
-	let player1;
 
 	form.addEventListener("submit", function (e) {
 		e.preventDefault();
@@ -85,23 +94,23 @@ const gamePlay = (() => {
 			player.active = player.active ? false : true;
 		});
 	};
-	const selection = (() => {
-		gameBoard.squares.forEach((square) => {
-			square.addEventListener("click", (e) => {
-				const activePlayer = player1.active ? player1 : player2;
-				console.log(activePlayer);
-				if (!square.innerHTML) {
-					square.innerHTML = activePlayer.getMarker();
-					gameBoard.gameBoard[square.dataset.num] = activePlayer.getMarker();
-					toggleActive([player1, player2]);
-				}
-				if (square.innerHTML) console.log("taken");
-				if (checkWin(gameBoard.gameBoard))
-					console.log(`${activePlayer.getName()} wins!`);
-			});
+	// const selection = (() => {
+	gameBoard.squares.forEach((square) => {
+		square.addEventListener("click", (e) => {
+			const activePlayer = player1.active ? player1 : player2;
+			console.log(activePlayer);
+			if (!square.innerHTML) {
+				square.innerHTML = activePlayer.getMarker();
+				gameBoard.gameBoard[square.dataset.num] = activePlayer.getMarker();
+				toggleActive([player1, player2]);
+			}
+			if (square.innerHTML) console.log("taken");
+			if (checkWin(gameBoard.gameBoard))
+				winMessage.innerHTML = `${activePlayer.getName()} wins!`;
 		});
-	})();
-	return { selection, toggleActive };
+	});
+	// })();
+	return {};
 })();
 
 // const player1 = Player("Josh", "X");
@@ -115,41 +124,41 @@ const gamePlay = (() => {
 // 4) the computer chooses where to place a marker based on overall board and where there is an opening between player selected squares to block or win if able between it's own squares.
 // 5) each time a square is selected by either player or computer, it is updated using the gameBoard module function.
 
-const arr = ["", "x", "o", "o", "x", "", "", "x", ""];
-const arr2 = ["a", "b", "c", "d", "b", "c", "e", "b", "c"];
-const arr3 = ["X", "O", "", "X", "O", "X", "", "O", ""];
-const arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
-const arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const test = ["O", "X", "", "", "X", "O", "", "X", ""];
+// const arr = ["", "x", "o", "o", "x", "", "", "x", ""];
+// const arr2 = ["a", "b", "c", "d", "b", "c", "e", "b", "c"];
+// const arr3 = ["X", "O", "", "X", "O", "X", "", "O", ""];
+// const arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
+// const arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// const test = ["O", "X", "", "", "X", "O", "", "X", ""];
 
 // console.log(calcWin(arr4, 1, 3));
-const winConditions = function (arr) {
-	const calcWin = function (arr, arrInc, setInc) {
-		let win = false;
-		for (let i = 0; i < setInc * 3; i += setInc) {
-			const a = arr[i];
-			const b = arr[i + arrInc];
-			const c = arr[i + arrInc * 2];
-			// if (!a || !b || !c) {
-			// 	console.log({ a, b, c });
-			// 	return;
-			// }
-			let win = a === b && a === c ? true : false;
-			if (win && a && b && c) return win;
-		}
-		return win;
-	};
-	const horizontalWin = [1, 3];
-	const verticalWin = [3, 1];
-	const diagonalWinA = [4, 2];
-	const diagonalWinB = [2, 2];
+// const winConditions = function (arr) {
+// 	const calcWin = function (arr, arrInc, setInc) {
+// 		let win = false;
+// 		for (let i = 0; i < setInc * 3; i += setInc) {
+// 			const a = arr[i];
+// 			const b = arr[i + arrInc];
+// 			const c = arr[i + arrInc * 2];
+// 			// if (!a || !b || !c) {
+// 			// 	console.log({ a, b, c });
+// 			// 	return;
+// 			// }
+// 			let win = a === b && a === c ? true : false;
+// 			if (win && a && b && c) return win;
+// 		}
+// 		return win;
+// 	};
+// 	const horizontalWin = [1, 3];
+// 	const verticalWin = [3, 1];
+// 	const diagonalWinA = [4, 2];
+// 	const diagonalWinB = [2, 2];
 
-	if (calcWin(arr, ...horizontalWin)) return true;
-	if (calcWin(arr, ...verticalWin)) return true;
-	if (calcWin(arr, ...diagonalWinA)) return true;
-	if (calcWin(arr, ...diagonalWinB)) return true;
-	return false;
-};
+// 	if (calcWin(arr, ...horizontalWin)) return true;
+// 	if (calcWin(arr, ...verticalWin)) return true;
+// 	if (calcWin(arr, ...diagonalWinA)) return true;
+// 	if (calcWin(arr, ...diagonalWinB)) return true;
+// 	return false;
+// };
 
 // console.log(winConditions(arr));
 // console.log(winConditions(arr2));
