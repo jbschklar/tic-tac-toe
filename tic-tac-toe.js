@@ -27,6 +27,7 @@ const gamePlay = (() => {
 	const winMessage = document.querySelector(".win-message");
 	let player2;
 	let player1;
+	let gameActive = false;
 
 	playerSelectBtn.addEventListener("click", () => {
 		form.classList.remove("hidden");
@@ -45,6 +46,7 @@ const gamePlay = (() => {
 		playerName.innerHTML = player1.getName();
 		playerMarker.innerHTML = player1.getMarker();
 		form.classList.add("hidden");
+		gameActive = true;
 	});
 
 	const checkWin = function (arr) {
@@ -81,30 +83,32 @@ const gamePlay = (() => {
 		});
 	};
 	const squareSelection = (square) => {
-		console.log(player1, player2);
+		if (!gameActive || square.innerHTML) return;
+
 		const activePlayer = player1.active ? player1 : player2;
-		console.log(activePlayer);
+
 		if (!square.innerHTML) {
-			// square.innerHTML = activePlayer.getMarker();
-			gameBoard.gameBoard[square.dataset.num] = activePlayer.getMarker();
-			gameBoard.renderBoard();
+			gameBoardDisplay.boardArr[square.dataset.num] = activePlayer.getMarker();
+			gameBoardDisplay.renderBoard();
 			toggleActive([player1, player2]);
 		}
-		if (square.innerHTML) console.log("taken");
-		if (checkWin(gameBoard.gameBoard))
+
+		if (checkWin(gameBoardDisplay.boardArr)) {
 			winMessage.innerHTML = `${activePlayer.getName()} wins!`;
+			gameActive = false;
+		}
 	};
 	return { squareSelection };
 })();
 
-const gameBoard = (() => {
+const gameBoardDisplay = (() => {
 	const board = document.querySelector(".game-board");
 	const squares = document.querySelectorAll(".square");
 	const inputs = document.querySelectorAll(".square-input");
-	let gameBoard = ["", "", "", "", "", "", "", "", ""];
+	let boardArr = ["", "", "", "", "", "", "", "", ""];
 	const renderBoard = () => {
 		squares.forEach((square) => {
-			square.innerHTML = gameBoard[square.dataset.num];
+			square.innerHTML = boardArr[square.dataset.num];
 		});
 	};
 	squares.forEach((square) => {
@@ -112,7 +116,7 @@ const gameBoard = (() => {
 			gamePlay.squareSelection(square);
 		});
 	});
-	return { squares, gameBoard, renderBoard };
+	return { boardArr, renderBoard };
 })();
 
 // const player1 = Player("Josh", "X");
