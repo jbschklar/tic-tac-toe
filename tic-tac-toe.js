@@ -100,8 +100,9 @@ const gamePlay = (() => {
 
 		const calcWin = function (arr, arrInc, setInc) {
 			let win = false;
-			let inc = setInc === 2 ? setInc : setInc * 3;
-			for (let i = 0; i < inc; i += setInc) {
+			// let inc = setInc === 2 ? 1 : setInc * 3;
+			let inc = setInc * 3;
+			for (let i = arrInc === 2 ? 2 : 0; i < inc; i += setInc) {
 				const a = arr[i];
 				const b = arr[i + arrInc];
 				const c = arr[i + arrInc * 2];
@@ -174,12 +175,13 @@ const gameBoardDisplay = (() => {
 // 4) the computer chooses where to place a marker based on overall board and where there is an opening between player selected squares to block or win if able between it's own squares.
 // 5) each time a square is selected by either player or computer, it is updated using the gameBoard module function.
 
-const arr = ["", "", "", "", "", "", "", "", ""];
-const arr2 = ["x", "", "x", "", "", "", "o", "", "o"];
-const arr3 = ["x", "o", "", "x", "o", "x", "", "", ""];
-const arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
-const arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const test = ["O", "X", "", "", "X", "O", "", "X", ""];
+let arr = ["", "", "", "", "", "", "", "", ""];
+let arr2 = ["x", "", "x", "", "", "o", "", "", "o"];
+let arr3 = ["x", "o", "", "", "o", "x", "", "", ""];
+let arr4 = ["a", 1, "a", 3, "a", 5, "a", 7, 8];
+let arr5 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let arr6 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let test = ["", "o", "x", "", "x", "x", "", "o", ""];
 
 const squares = document.querySelectorAll(".square");
 
@@ -192,12 +194,11 @@ const checkWin = function (arr) {
 
 	const calcWin = function (arr, arrInc, setInc) {
 		let win = false;
-		let inc = setInc === 2 ? setInc : setInc * 3;
-		for (let i = 0; i < inc; i += setInc) {
+		let inc = setInc * 3;
+		for (let i = arrInc === 2 ? 2 : 0; i < inc; i += setInc) {
 			const a = arr[i];
 			const b = arr[i + arrInc];
 			const c = arr[i + arrInc * 2];
-
 			let win = a === b && a === c ? true : false;
 			if (win && a && b && c) {
 				return win;
@@ -209,38 +210,56 @@ const checkWin = function (arr) {
 	if (calcWin(arr, ...horizontalWin)) return true;
 	if (calcWin(arr, ...verticalWin)) return true;
 	if (calcWin(arr, ...diagonalWinA)) {
-		// console.log("diagonalWinA");
+		console.log("diagonalWinA");
 		return true;
 	}
 	if (calcWin(arr, ...diagonalWinB)) {
-		// console.log("diagonalWinA");
+		console.log("diagonalWinB");
 		return true;
 	}
 	return false;
+};
+
+const compareArr = function (arr1, arr2) {
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1.length !== arr2.length) return false;
+		if (arr1[i] !== arr2[i]) return false;
+	}
+	return true;
 };
 
 const playerAI = {
 	marker: "o",
 
 	defenseAI(arr) {
-		for (let i = 0; i < arr.length; i++) {
-			if (arr[i] === "") {
-				arr[i] = "x";
-				// console.log(arr, i);
-				if (!checkWin(arr)) {
-					arr[i] = "";
+		let newArr = arr.slice();
+		for (let i = 0; i < newArr.length; i++) {
+			// let target = newArr[i];
+			// if (target === "") {
+			// 	target = "x";
+			// 	if (checkWin(newArr)) console.log(newArr);
+			// 	// target = checkWin(newArr) ? "o" : "";
+			// 	if (target === "o") {
+			// 		console.log("break", newArr);
+			// 	}
+			// }
+			if (newArr[i] === "") {
+				newArr[i] = "x";
+				// console.log(newArr, i);
+				if (!checkWin(newArr)) {
+					newArr[i] = "";
 					// console.log(i);
 					continue;
 				}
-				if (checkWin(arr)) {
+				if (checkWin(newArr)) {
 					console.log("block", i);
-					arr[i] = "o";
-					let newArr = arr.slice(0);
+					newArr[i] = "o";
 					console.log(newArr);
-					return;
+					return newArr;
 				}
 			}
 		}
+		// return newArr;
 	},
 
 	offenseAI(arr) {
@@ -250,39 +269,45 @@ const playerAI = {
 				newArr[i] = "o";
 				if (!checkWin(newArr)) {
 					newArr[i] = "";
-					console.log(newArr, i);
 					continue;
 				}
 				if (checkWin(newArr)) {
 					console.log("win", i);
-
-					console.log(newArr);
-					return;
+					return newArr;
 				}
 			}
+			// if (i === 8 && !checkWin(arr)) return false;
 		}
+		// return arr;
 	},
 
 	randomAI(arr) {
-		let newArr = arr.slice(0);
-		let x = Math.floor(Math.random() * 8) + 1;
+		// let newArr = arr.slice(0);
+		let x = Math.floor(Math.random() * 9);
 		console.log({ x });
-		while (newArr[x]) {
-			console.log(newArr[x], x);
-			x = Math.floor(Math.random() * 8) + 1;
+		while (arr[x]) {
+			console.log(arr[x], x);
+			x = Math.floor(Math.random() * 9);
 		}
-		newArr[x] = "o";
-		console.log(newArr);
+		arr[x] = "o";
+		return arr;
 	},
 
-	// selectionAI(arr) {
-	// 	if(){}
-	// },
+	selectionAI(arr) {
+		if (this.defenseAI(arr)) return this.defenseAI(arr);
+		if (this.offenseAI(arr)) return this.offenseAI(arr);
+		return this.randomAI(arr);
+		// return this.defenseAI(arr);
+		// return this.offenseAI(arr);
+	},
 };
 // console.log(arr3);
-playerAI.defenseAI(arr);
-playerAI.offenseAI(arr);
-playerAI.randomAI(arr);
+// playerAI.defenseAI(arr);
+// playerAI.offenseAI(arr);
+// playerAI.randomAI(arr);
+
+console.log(playerAI.selectionAI(test));
+
 // console.log(winConditions(arr));
 // console.log(winConditions(arr2));
 // console.log(winConditions(arr3));
