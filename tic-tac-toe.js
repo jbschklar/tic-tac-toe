@@ -18,7 +18,7 @@ const GameAI = (marker, active = false) => {
 				// 	// console.log(i);
 				// 	// continue;
 				// }
-				if (checkWin(arr)) {
+				if (gamePlay.checkWin(arr)) {
 					console.log("block", i);
 					arr[i] = marker;
 					return arr;
@@ -33,11 +33,11 @@ const GameAI = (marker, active = false) => {
 		for (let i = 0; i < arr.length; i++) {
 			if (arr[i] === "") {
 				arr[i] = marker;
-				if (!checkWin(arr)) {
+				if (!gamePlay.checkWin(arr)) {
 					arr[i] = "";
 					continue;
 				}
-				if (checkWin(arr)) {
+				if (gamePlay.checkWin(arr)) {
 					console.log("win", i);
 					return arr;
 				}
@@ -74,8 +74,8 @@ const GameAI = (marker, active = false) => {
 	};
 
 	const selectionAI = function (arr) {
-		if (defenseAI(arr)) return defenseAI(arr);
 		if (offenseAI(arr)) return offenseAI(arr);
+		if (defenseAI(arr)) return defenseAI(arr);
 		return randomAI(arr);
 	};
 	return { selectionAI, getMarker, active };
@@ -186,7 +186,7 @@ const gamePlay = (() => {
 		// 	gameActive = false;
 		// }
 	};
-	return { squareSelection };
+	return { squareSelection, checkWin };
 })();
 
 const gameBoardDisplay = (() => {
@@ -229,158 +229,158 @@ let test = ["x", "o", "x", "x", "o", "", "o", "x", "o"];
 const squares = document.querySelectorAll(".square");
 
 // console.log(calcWin(arr4, 1, 3));
-const checkWin = function (arr) {
-	const horizontalWin = [1, 3];
-	const verticalWin = [3, 1];
-	const diagonalWinA = [4, 2];
-	const diagonalWinB = [2, 2];
+// const checkWin = function (arr) {
+// 	const horizontalWin = [1, 3];
+// 	const verticalWin = [3, 1];
+// 	const diagonalWinA = [4, 2];
+// 	const diagonalWinB = [2, 2];
 
-	const calcWin = function (arr, arrInc, setInc) {
-		let win = false;
-		let inc = setInc === 2 ? 2 : setInc * 3;
-		for (let i = arrInc === 2 ? 2 : 0; i < inc; i += setInc) {
-			const a = arr[i];
-			const b = arr[i + arrInc];
-			const c = arr[i + arrInc * 2];
-			let win = a === b && a === c ? true : false;
-			if (win && a && b && c) {
-				console.log({ a, b, c, i });
-				return win;
-			}
-		}
-		return win;
-	};
+// 	const calcWin = function (arr, arrInc, setInc) {
+// 		let win = false;
+// 		let inc = setInc === 2 ? 2 : setInc * 3;
+// 		for (let i = arrInc === 2 ? 2 : 0; i < inc; i += setInc) {
+// 			const a = arr[i];
+// 			const b = arr[i + arrInc];
+// 			const c = arr[i + arrInc * 2];
+// 			let win = a === b && a === c ? true : false;
+// 			if (win && a && b && c) {
+// 				console.log({ a, b, c, i });
+// 				return win;
+// 			}
+// 		}
+// 		return win;
+// 	};
 
-	if (calcWin(arr, ...horizontalWin)) {
-		console.log("horizontalWin");
-		return true;
-	}
-	if (calcWin(arr, ...verticalWin)) {
-		console.log("verticalWin");
-		return true;
-	}
-	if (calcWin(arr, ...diagonalWinA)) {
-		console.log("diagonalWinA");
-		return true;
-	}
-	if (calcWin(arr, ...diagonalWinB)) {
-		console.log("diagonalWinB");
-		return true;
-	}
-	return false;
-};
+// 	if (calcWin(arr, ...horizontalWin)) {
+// 		console.log("horizontalWin");
+// 		return true;
+// 	}
+// 	if (calcWin(arr, ...verticalWin)) {
+// 		console.log("verticalWin");
+// 		return true;
+// 	}
+// 	if (calcWin(arr, ...diagonalWinA)) {
+// 		console.log("diagonalWinA");
+// 		return true;
+// 	}
+// 	if (calcWin(arr, ...diagonalWinB)) {
+// 		console.log("diagonalWinB");
+// 		return true;
+// 	}
+// 	return false;
+// };
 
-const compareArr = function (arr1, arr2) {
-	for (let i = 0; i < arr1.length; i++) {
-		if (arr1.length !== arr2.length) return false;
-		if (arr1[i] !== arr2[i]) return false;
-	}
-	return true;
-};
+// const compareArr = function (arr1, arr2) {
+// 	for (let i = 0; i < arr1.length; i++) {
+// 		if (arr1.length !== arr2.length) return false;
+// 		if (arr1[i] !== arr2[i]) return false;
+// 	}
+// 	return true;
+// };
 
-const playerAI = {
-	marker: "o",
+// const playerAI = {
+// 	marker: "o",
 
-	defenseAI(arr) {
-		let newArr = arr.slice();
-		for (let i = 0; i < newArr.length; i++) {
-			if (newArr[i] === "") {
-				newArr[i] = "x";
-				// console.log(newArr, i);
-				if (!checkWin(newArr)) {
-					newArr[i] = "";
-					// console.log(i);
-					continue;
-				}
-				if (checkWin(newArr)) {
-					console.log("block", i);
-					newArr[i] = "o";
-					console.log(newArr);
-					return newArr;
-				}
-			}
-		}
-	},
+// 	defenseAI(arr) {
+// 		let newArr = arr.slice();
+// 		for (let i = 0; i < newArr.length; i++) {
+// 			if (newArr[i] === "") {
+// 				newArr[i] = "x";
+// 				// console.log(newArr, i);
+// 				if (!checkWin(newArr)) {
+// 					newArr[i] = "";
+// 					// console.log(i);
+// 					continue;
+// 				}
+// 				if (checkWin(newArr)) {
+// 					console.log("block", i);
+// 					newArr[i] = "o";
+// 					console.log(newArr);
+// 					return newArr;
+// 				}
+// 			}
+// 		}
+// 	},
 
-	offenseAI(arr) {
-		let newArr = arr.slice();
-		for (let i = 0; i < newArr.length; i++) {
-			if (newArr[i] === "") {
-				newArr[i] = "o";
-				if (!checkWin(newArr)) {
-					newArr[i] = "";
-					continue;
-				}
-				if (checkWin(newArr)) {
-					console.log("win", i);
-					return newArr;
-				}
-			}
-		}
-	},
+// 	offenseAI(arr) {
+// 		let newArr = arr.slice();
+// 		for (let i = 0; i < newArr.length; i++) {
+// 			if (newArr[i] === "") {
+// 				newArr[i] = "o";
+// 				if (!checkWin(newArr)) {
+// 					newArr[i] = "";
+// 					continue;
+// 				}
+// 				if (checkWin(newArr)) {
+// 					console.log("win", i);
+// 					return newArr;
+// 				}
+// 			}
+// 		}
+// 	},
 
-	randomAI(arr) {
-		// let newArr = arr.slice(0);
-		// let x = Math.floor(Math.random() * 9);
-		// console.log({ x });
-		// while (arr[x]) {
-		// 	console.log(arr[x], x);
-		// 	x = Math.floor(Math.random() * 9);
-		// }
-		// arr[x] = "o";
-		// return arr;
-		// let randNum = Math.floor(Math.random() * 9);
-		let emptySqArr = [];
-		for (let i = 0; i < arr.length; i++) {
-			if (arr[i]) continue;
-			emptySqArr.push(i);
-		}
-		console.log(emptySqArr);
-		let x = Math.floor(Math.random() * emptySqArr.length);
-		console.log(x, emptySqArr[x]);
-		let index = emptySqArr[x];
-		arr[index] = "o";
-		console.log(arr);
-	},
+// 	randomAI(arr) {
+// 		// let newArr = arr.slice(0);
+// 		// let x = Math.floor(Math.random() * 9);
+// 		// console.log({ x });
+// 		// while (arr[x]) {
+// 		// 	console.log(arr[x], x);
+// 		// 	x = Math.floor(Math.random() * 9);
+// 		// }
+// 		// arr[x] = "o";
+// 		// return arr;
+// 		// let randNum = Math.floor(Math.random() * 9);
+// 		let emptySqArr = [];
+// 		for (let i = 0; i < arr.length; i++) {
+// 			if (arr[i]) continue;
+// 			emptySqArr.push(i);
+// 		}
+// 		console.log(emptySqArr);
+// 		let x = Math.floor(Math.random() * emptySqArr.length);
+// 		console.log(x, emptySqArr[x]);
+// 		let index = emptySqArr[x];
+// 		arr[index] = "o";
+// 		console.log(arr);
+// 	},
 
-	selectionAI(arr) {
-		if (this.defenseAI(arr)) return this.defenseAI(arr);
-		if (this.offenseAI(arr)) return this.offenseAI(arr);
-		return this.randomAI(arr);
-	},
-};
-// console.log(arr3);
-// playerAI.defenseAI(arr);
-// playerAI.offenseAI(arr);
-// playerAI.randomAI(arr3);
+// 	selectionAI(arr) {
+// 		if (this.defenseAI(arr)) return this.defenseAI(arr);
+// 		if (this.offenseAI(arr)) return this.offenseAI(arr);
+// 		return this.randomAI(arr);
+// 	},
+// };
+// // console.log(arr3);
+// // playerAI.defenseAI(arr);
+// // playerAI.offenseAI(arr);
+// // playerAI.randomAI(arr3);
 
-// console.log(playerAI.selectionAI(test));
-console.log(checkWin(test));
+// // console.log(playerAI.selectionAI(test));
+// console.log(checkWin(test));
 
-// console.log(winConditions(arr));
-// console.log(winConditions(arr2));
-// console.log(winConditions(arr3));
-// console.log(winConditions(test));
-// console.log(winConditions(arr5));
+// // console.log(winConditions(arr));
+// // console.log(winConditions(arr2));
+// // console.log(winConditions(arr3));
+// // console.log(winConditions(test));
+// // console.log(winConditions(arr5));
 
-// gameplay: functions for gameplay
+// // gameplay: functions for gameplay
 
-// gameboard: update board using those functions
+// // gameboard: update board using those functions
 
-// const testArr = [1, 2, 3, 4];
-// testArr[1] = "x";
-// console.log(testArr);
-const checkDraw = (arr) => {
-	// arr.forEach((el) => {
-	// 	if (el) {
-	// 		console.log("nope");
-	// 		return false;
-	// 	}
-	// });
-	for (let i = 0; i < arr.length; i++) {
-		if (!arr[i]) return false;
-	}
-	return true;
-};
+// // const testArr = [1, 2, 3, 4];
+// // testArr[1] = "x";
+// // console.log(testArr);
+// const checkDraw = (arr) => {
+// 	// arr.forEach((el) => {
+// 	// 	if (el) {
+// 	// 		console.log("nope");
+// 	// 		return false;
+// 	// 	}
+// 	// });
+// 	for (let i = 0; i < arr.length; i++) {
+// 		if (!arr[i]) return false;
+// 	}
+// 	return true;
+// };
 
-console.log(checkDraw(arr5));
+// console.log(checkDraw(arr5));
