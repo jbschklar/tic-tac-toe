@@ -8,16 +8,9 @@ const Player = (name, marker, active = true) => {
 const GameAI = (marker, active = false) => {
 	const getMarker = () => marker;
 	const defenseAI = function (arr) {
-		// let newArr = arr.slice();
 		for (let i = 0; i < arr.length; i++) {
 			if (arr[i] === "") {
 				arr[i] = marker === "O" ? "X" : "O";
-				// console.log(newArr, i);
-				// if (!checkWin(arr)) {
-				// 	arr[i] = "";
-				// 	// console.log(i);
-				// 	// continue;
-				// }
 				if (gamePlay.checkWin(arr)) {
 					console.log("block", i);
 					arr[i] = marker;
@@ -29,7 +22,6 @@ const GameAI = (marker, active = false) => {
 	};
 
 	const offenseAI = function (arr) {
-		// let newArr = arr.slice();
 		for (let i = 0; i < arr.length; i++) {
 			if (arr[i] === "") {
 				arr[i] = marker;
@@ -46,14 +38,6 @@ const GameAI = (marker, active = false) => {
 	};
 
 	const randomAI = function (arr) {
-		// let randNum = Math.floor(Math.random() * 9);
-		// let emptySqArr = [];
-		// console.log({ randNum });
-		// for (let i = 0; i < arr.length; i++) {
-		// 	if (arr[i]) return;
-		// 	emptySqArr.push(i);
-		// }
-
 		let emptySqArr = [];
 		for (let i = 0; i < arr.length; i++) {
 			if (arr[i]) continue;
@@ -64,18 +48,12 @@ const GameAI = (marker, active = false) => {
 		console.log(x, emptySqArr[x]);
 		let index = emptySqArr[x];
 		arr[index] = marker;
-		// console.log(arr);
-		// while (arr[x]) {
-		// 	console.log(arr[x], x);
-		// 	x = Math.floor(Math.random() * 9);
-		// }
-		// arr[x] = marker;
 		return arr;
 	};
 
 	const selectionAI = function (arr) {
-		if (offenseAI(arr)) return offenseAI(arr);
-		if (defenseAI(arr)) return defenseAI(arr);
+		if (offenseAI(arr)) return;
+		if (defenseAI(arr)) return;
 		return randomAI(arr);
 	};
 	return { selectionAI, getMarker, active };
@@ -120,8 +98,8 @@ const gamePlay = (() => {
 
 		const calcWin = function (arr, arrInc, setInc) {
 			let win = false;
-			// let inc = setInc === 2 ? 2 : setInc * 3;
-			let inc = setInc * 3;
+			let inc = setInc === 2 ? 3 : setInc * 3;
+			// let inc = setInc * 3;
 			for (let i = arrInc === 2 ? 2 : 0; i < inc; i += setInc) {
 				const a = arr[i];
 				const b = arr[i + arrInc];
@@ -163,7 +141,7 @@ const gamePlay = (() => {
 			gameBoardDisplay.renderBoard();
 			if (checkWin(gameBoardDisplay.boardArr)) {
 				winMessage.innerHTML = `${player1.getName()} wins!`;
-				// gameActive = false;
+				gameActive = false;
 				return;
 			}
 			toggleActive([player1, player2]);
@@ -171,7 +149,7 @@ const gamePlay = (() => {
 			gameBoardDisplay.renderBoard();
 			if (checkWin(gameBoardDisplay.boardArr)) {
 				winMessage.innerHTML = `Computer wins!`;
-				// gameActive = false;
+				gameActive = false;
 				return;
 			}
 			toggleActive([player1, player2]);
@@ -180,27 +158,47 @@ const gamePlay = (() => {
 				return;
 			}
 		}
-
-		// if (checkWin(gameBoardDisplay.boardArr)) {
-		// 	winMessage.innerHTML = `${activePlayer.getName()} wins!`;
-		// 	gameActive = false;
-		// }
 	};
-	return { squareSelection, checkWin };
+
+	const init = () => {
+		winMessage.innerHTML = "";
+		// playerName.innerHTML = '';
+		// playerMarker.innerHTML = '';
+		gameBoardDisplay.boardArr.forEach((el) => {
+			gameBoardDisplay.boardArr.splice(
+				gameBoardDisplay.boardArr.indexOf(el),
+				1,
+				""
+			);
+		});
+		gameBoardDisplay.renderBoard(gameBoardDisplay.boardArr);
+		gameActive = true;
+	};
+
+	return { squareSelection, checkWin, init };
 })();
 
 const gameBoardDisplay = (() => {
+	const winMessage = document.querySelector(".win-message");
+	const playerName = document.querySelector(".player-name");
+	const playerMarker = document.querySelector(".player-marker");
 	const board = document.querySelector(".game-board");
 	const squares = document.querySelectorAll(".square");
-	const inputs = document.querySelectorAll(".square-input");
+	const resetBtn = document.querySelector(".reset-btn");
 	let boardArr = ["", "", "", "", "", "", "", "", ""];
 	const renderBoard = () => {
 		squares.forEach((square) => {
 			square.innerHTML = boardArr[square.dataset.num];
 		});
 	};
+
+	resetBtn.addEventListener("click", () => {
+		console.log("init");
+		gamePlay.init();
+	});
 	squares.forEach((square) => {
 		square.addEventListener("click", () => {
+			console.log("click");
 			gamePlay.squareSelection(square);
 		});
 	});
