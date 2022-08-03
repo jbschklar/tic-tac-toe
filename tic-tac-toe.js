@@ -59,9 +59,42 @@ const GameAI = (marker, active = false) => {
 	return { selectionAI, getMarker, active };
 };
 
-const gamePlay = (() => {
+const gameBoardDisplay = (() => {
 	const playerSelectBtn = document.querySelector(".player-select");
 	const form = document.querySelector("form");
+	const winMessage = document.querySelector(".win-message");
+	const playerName = document.querySelector(".player-name");
+	const playerMarker = document.querySelector(".player-marker");
+	const board = document.querySelector(".game-board");
+	const squares = document.querySelectorAll(".square");
+	const resetBtn = document.querySelector(".reset-btn");
+	let boardArr = ["", "", "", "", "", "", "", "", ""];
+	const renderBoard = () => {
+		squares.forEach((square) => {
+			square.innerHTML = boardArr[square.dataset.num];
+		});
+	};
+
+	playerSelectBtn.addEventListener("click", (e) => {
+		form.classList.remove("hidden");
+		gamePlay.init(e);
+	});
+
+	resetBtn.addEventListener("click", (e) => {
+		console.log("init");
+		gamePlay.init(e);
+	});
+	squares.forEach((square) => {
+		square.addEventListener("click", () => {
+			console.log("click");
+			gamePlay.squareSelection(square);
+		});
+	});
+	return { boardArr, renderBoard, form };
+})();
+
+const gamePlay = (() => {
+	const form = gameBoardDisplay.form;
 	const playerName = document.querySelector(".player-name");
 	const playerMarker = document.querySelector(".player-marker");
 	const winMessage = document.querySelector(".win-message");
@@ -69,9 +102,25 @@ const gamePlay = (() => {
 	let player1;
 	let gameActive = false;
 
-	playerSelectBtn.addEventListener("click", () => {
-		form.classList.remove("hidden");
-	});
+	const init = (e) => {
+		winMessage.innerHTML = "";
+		console.log(e.target);
+		if (e.target.classList.contains("player-select")) {
+			console.log("player select");
+			playerName.innerHTML = "";
+			playerMarker.innerHTML = "";
+		}
+
+		gameBoardDisplay.boardArr.forEach((el) => {
+			gameBoardDisplay.boardArr.splice(
+				gameBoardDisplay.boardArr.indexOf(el),
+				1,
+				""
+			);
+		});
+		gameBoardDisplay.renderBoard(gameBoardDisplay.boardArr);
+		gameActive = true;
+	};
 
 	form.addEventListener("submit", function (e) {
 		e.preventDefault();
@@ -140,7 +189,7 @@ const gamePlay = (() => {
 			gameBoardDisplay.boardArr[square.dataset.num] = player1.getMarker();
 			gameBoardDisplay.renderBoard();
 			if (checkWin(gameBoardDisplay.boardArr)) {
-				winMessage.innerHTML = `${player1.getName()} wins!`;
+				winMessage.innerHTML = `🤘 ${player1.getName()} wins!`;
 				gameActive = false;
 				return;
 			}
@@ -148,7 +197,7 @@ const gamePlay = (() => {
 			player2.selectionAI(gameBoardDisplay.boardArr);
 			gameBoardDisplay.renderBoard();
 			if (checkWin(gameBoardDisplay.boardArr)) {
-				winMessage.innerHTML = `Computer wins!`;
+				winMessage.innerHTML = `Computer wins 🤬`;
 				gameActive = false;
 				return;
 			}
@@ -160,49 +209,7 @@ const gamePlay = (() => {
 		}
 	};
 
-	const init = () => {
-		winMessage.innerHTML = "";
-		// playerName.innerHTML = '';
-		// playerMarker.innerHTML = '';
-		gameBoardDisplay.boardArr.forEach((el) => {
-			gameBoardDisplay.boardArr.splice(
-				gameBoardDisplay.boardArr.indexOf(el),
-				1,
-				""
-			);
-		});
-		gameBoardDisplay.renderBoard(gameBoardDisplay.boardArr);
-		gameActive = true;
-	};
-
-	return { squareSelection, checkWin, init };
-})();
-
-const gameBoardDisplay = (() => {
-	const winMessage = document.querySelector(".win-message");
-	const playerName = document.querySelector(".player-name");
-	const playerMarker = document.querySelector(".player-marker");
-	const board = document.querySelector(".game-board");
-	const squares = document.querySelectorAll(".square");
-	const resetBtn = document.querySelector(".reset-btn");
-	let boardArr = ["", "", "", "", "", "", "", "", ""];
-	const renderBoard = () => {
-		squares.forEach((square) => {
-			square.innerHTML = boardArr[square.dataset.num];
-		});
-	};
-
-	resetBtn.addEventListener("click", () => {
-		console.log("init");
-		gamePlay.init();
-	});
-	squares.forEach((square) => {
-		square.addEventListener("click", () => {
-			console.log("click");
-			gamePlay.squareSelection(square);
-		});
-	});
-	return { boardArr, renderBoard };
+	return { squareSelection, checkWin, init, gameActive };
 })();
 
 // const player1 = Player("Josh", "X");

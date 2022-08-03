@@ -11,27 +11,31 @@
 	<body>
 		<h1>Tic-Tac-Toe</h1>
 		<div class="player-display">
-			<button class="player-select">Player select</button>
-			<p class="player-name"></p>
-			<p class="player-marker"></p>
-			<p class="win-message"></p>
-			<button class="reset-btn">Reset</button>
+			<div class="btns">
+				<button class="player-select">Player select</button>
+				<button class="reset-btn">Reset</button>
+			</div>
+			<div class="info">
+				<p class="player-name"></p>
+				<p class="player-marker"></p>
+				<p class="win-message"></p>
+			</div>
 		</div>
-		<div class="form-container">
-			<form action="#" class="player-info hidden">
-				<div class="name-input">
-					<label for="name">Player name:</label>
-					<input type="text" name="name" id="name" />
-				</div>
-				<div class="marker-select">
-					<input type="radio" name="marker" id="X" />
-					<label for="X">X</label>
-					<input type="radio" name="marker" id="O" />
-					<label for="O">O</label>
-				</div>
-				<button type="submit">Submit</button>
-			</form>
-		</div>
+		<!-- <div class="form-container"> -->
+		<form action="#" class="player-info hidden">
+			<div class="name-input">
+				<label for="name">Player name:</label>
+				<input type="text" name="name" id="name" />
+			</div>
+			<div class="marker-select">
+				<input type="radio" name="marker" id="X" />
+				<label for="X">X</label>
+				<input type="radio" name="marker" id="O" />
+				<label for="O">O</label>
+			</div>
+			<button type="submit">Submit</button>
+		</form>
+		<!-- </div> -->
 
 		<div class="game-board">
 			<div class="square" data-num="0"></div>
