@@ -133,8 +133,8 @@ const gamePlay = (() => {
 		// 	false
 		// );
 		player2 = GameAI(player1.getMarker() === "X" ? "O" : "X");
-		playerName.innerHTML = player1.getName();
-		playerMarker.innerHTML = player1.getMarker();
+		playerName.innerHTML = `Player: ${player1.getName()}`;
+		playerMarker.innerHTML = `${player1.getMarker()}`;
 		form.classList.add("hidden");
 		gameActive = true;
 	});
