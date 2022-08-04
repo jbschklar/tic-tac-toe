@@ -38,12 +38,13 @@ header {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-top: 60px;
 }
 
 .game-board {
-	padding: 60px;
-	width: 30vw;
-	height: 40vh;
+	/* padding: 60px; */
+	width: 300px;
+	height: 300px;
 	grid-column: 2/-1;
 
 	display: grid;
@@ -55,6 +56,7 @@ header {
 	align-items: center;
 	justify-content: center;
 	font-size: 2rem;
+	height: 100px;
 }
 
 [data-num="0"] {
@@ -140,7 +142,7 @@ header {
 	justify-content: center;
 	align-items: center;
 	gap: 15px;
-	height: 85px;
+	height: 150px;
 	width: auto;
 	margin: 15px;
 }
