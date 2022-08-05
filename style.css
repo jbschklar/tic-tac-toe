@@ -20,7 +20,7 @@ header {
 	align-items: center;
 }
 
-.player-info {
+.info-form {
 	padding: 15px;
 	border: 2px solid black;
 	display: flex;
@@ -110,7 +110,6 @@ header {
 .hidden {
 	opacity: 0;
 	position: absolute;
-	right: 0;
 	bottom: 0;
 	height: fit-content;
 }
