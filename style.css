@@ -109,8 +109,9 @@ header {
 
 .hidden {
 	opacity: 0;
-	position: absolute;
-	bottom: 0;
+	/* position: absolute;
+	bottom: 0; */
+	position: static;
 	height: fit-content;
 }
 
@@ -119,7 +120,7 @@ header {
 	flex-direction: column;
 	align-items: center;
 	gap: 15px;
-	height: 75%;
+	height: 80%;
 	padding-left: 20px;
 }
 
